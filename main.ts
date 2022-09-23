@@ -1,6 +1,30 @@
 enum RadioMessage {
     message1 = 49434
 }
+// Emoji List!
+radio.onReceivedNumber(function (receivedNumber) {
+    if (receivedNumber == 3) {
+        basic.showLeds(`
+            # # . # #
+            # # . # #
+            . . . . .
+            # . . . #
+            . # # # .
+            `)
+    }
+    if (receivedNumber == 4) {
+        basic.showLeds(`
+            # # . # #
+            # # . # #
+            . # # # .
+            # . . . #
+            . # # # .
+            `)
+    }
+    if (receivedNumber == 5) {
+        basic.showIcon(IconNames.Heart)
+    }
+})
 // This is button A code. The "ifs" check if the variable "Sending or changing channel?" Is equal to one so it enters channel mode, 2 for message to channel, and 3 for power level.
 input.onButtonPressed(Button.A, function () {
     if (Sending_or_changing_channel == 1) {
@@ -15,6 +39,7 @@ input.onButtonPressed(Button.A, function () {
         music.playTone(494, music.beat(BeatFraction.Quarter))
         music.playTone(659, music.beat(BeatFraction.Quarter))
         radio.sendString("" + (text_list[Message_to_send]))
+        radio.sendNumber(Message_to_send)
     }
     if (Sending_or_changing_channel == 3) {
         Power_Level += -1
@@ -24,12 +49,18 @@ input.onButtonPressed(Button.A, function () {
 // Add +1 to "Sending or changing channel?" This therefore switches the mode from channel to send message and from send message to configure signal strength and from signal strength back to channel
 input.onButtonPressed(Button.AB, function () {
     Sending_or_changing_channel += 1
-    music.playTone(330, music.beat(BeatFraction.Eighth))
-    music.playTone(440, music.beat(BeatFraction.Whole))
+    music.playTone(440, music.beat(BeatFraction.Eighth))
+    music.playTone(494, music.beat(BeatFraction.Quarter))
 })
 // This is the code where it shows you the string you have received from someone on the same channel
 radio.onReceivedString(function (receivedString) {
-    basic.showString(receivedString)
+    if (Message_to_send != 3) {
+        if (Message_to_send != 4) {
+            if (Message_to_send != 5) {
+                basic.showString(receivedString)
+            }
+        }
+    }
 })
 // This is the button B code. Same logic applies for this as button A but it has different functions. This one just increases the variable in the mode selected by 1.
 input.onButtonPressed(Button.B, function () {
@@ -60,9 +91,9 @@ text_list = [
 "Hello!",
 "No",
 "Yes",
-"Null",
-"Null",
-"Null",
+" ",
+" ",
+" ",
 "Null",
 "Null",
 "Null",
@@ -76,6 +107,7 @@ radio.setGroup(1)
 let Radio_Frequency = 1
 Message_Delay_antispam = 0
 led.setBrightness(255)
+basic.clearScreen()
 // Every one second remove one from message delay (antispam), this is the code that counts down the message delay variable.
 loops.everyInterval(1000, function () {
     Message_Delay_antispam += -1
@@ -104,18 +136,20 @@ basic.forever(function () {
     if (1 < Audio) {
         Audio = 0
     }
-    if (5 < Message_to_send) {
+    if (10 < Message_to_send) {
         Message_to_send = 0
     }
     radio.setTransmitPower(Power_Level)
     if (Power_Level < 0) {
         Power_Level = 1
         basic.showIcon(IconNames.No)
+        Power_Level += -1
         music.playTone(175, music.beat(BeatFraction.Quarter))
     }
     if (7 < Power_Level) {
         Power_Level = 6
         basic.showIcon(IconNames.No)
+        Power_Level += 1
         music.playTone(175, music.beat(BeatFraction.Quarter))
     }
 })
@@ -306,6 +340,110 @@ basic.forever(function () {
         }
     }
 })
+// This is the display code for sending a premade message. It uses the same principle as the radio frequency display code.
+basic.forever(function () {
+    while (Sending_or_changing_channel == 2) {
+        if (Message_to_send == 0) {
+            basic.showLeds(`
+                . # . . .
+                # . # . .
+                # . # . .
+                # . # . .
+                . # . . .
+                `)
+        }
+        if (Message_to_send == 1) {
+            basic.showLeds(`
+                . # . . .
+                # # . . .
+                . # . . .
+                . # . . .
+                # # # . .
+                `)
+        }
+        if (Message_to_send == 2) {
+            basic.showLeds(`
+                . # # . .
+                # . . # .
+                . . # . .
+                . # . . .
+                # # # # .
+                `)
+        }
+        if (Message_to_send == 3) {
+            basic.showLeds(`
+                . # # . .
+                # . . # .
+                . . # . .
+                # . . # .
+                . # # . .
+                `)
+        }
+        if (Message_to_send == 4) {
+            basic.showLeds(`
+                . # # . .
+                # . # . .
+                # # # # .
+                . . # . .
+                . . # . .
+                `)
+        }
+        if (Message_to_send == 5) {
+            basic.showLeds(`
+                # # # # .
+                # . . . .
+                # # # . .
+                . . . # .
+                # # # . .
+                `)
+        }
+        if (Message_to_send == 6) {
+            basic.showLeds(`
+                . # # . .
+                # . . . .
+                # # # . .
+                # . . # .
+                . # # . .
+                `)
+        }
+        if (Message_to_send == 7) {
+            basic.showLeds(`
+                # # # # .
+                . . . # .
+                . . # . .
+                . # . . .
+                . # . . .
+                `)
+        }
+        if (Message_to_send == 8) {
+            basic.showLeds(`
+                # # # . .
+                # . # . .
+                # # # . .
+                # . # . .
+                # # # . .
+                `)
+        }
+        if (Message_to_send == 9) {
+            basic.showLeds(`
+                # # # . .
+                # . # . .
+                # # # . .
+                . . # . .
+                # # # . .
+                `)
+        }
+        if (Message_to_send == 10) {
+            basic.showLeds(`
+                . # . # #
+                # # . # #
+                . # . # #
+                . # . # #
+                . # . # #
+                `)
+        }
+    }
+})
 // This is the display code for power level. It also, just like it's message and channel brothers. It uses the same principle for the display as them.
 basic.forever(function () {
     while (Sending_or_changing_channel == 3) {
@@ -379,65 +517,6 @@ basic.forever(function () {
                 . . # . .
                 . # . . .
                 . # . . .
-                `)
-        }
-    }
-})
-// This is the display code for sending a premade message. It uses the same principle as the radio frequency display code.
-basic.forever(function () {
-    while (Sending_or_changing_channel == 2) {
-        if (Message_to_send == 0) {
-            basic.showLeds(`
-                . # . . .
-                # . # . .
-                # . # . .
-                # . # . .
-                . # . . .
-                `)
-        }
-        if (Message_to_send == 1) {
-            basic.showLeds(`
-                . # . . .
-                # # . . .
-                . # . . .
-                . # . . .
-                # # # . .
-                `)
-        }
-        if (Message_to_send == 2) {
-            basic.showLeds(`
-                . # # . .
-                # . . # .
-                . . # . .
-                . # . . .
-                # # # # .
-                `)
-        }
-        if (Message_to_send == 3) {
-            basic.showLeds(`
-                . # # . .
-                # . . # .
-                . . # . .
-                # . . # .
-                . # # . .
-                `)
-        }
-        if (Message_to_send == 4) {
-            basic.showLeds(`
-                . # # . .
-                # . # . .
-                # # # # .
-                . . # . .
-                . . # . .
-                `)
-        }
-        if (Message_to_send == 5) {
-            basic.showLeds(`
-                # # # # .
-                # . . . .
-                # # # . .
-                . . . # .
-                # # # . .
                 `)
         }
     }
